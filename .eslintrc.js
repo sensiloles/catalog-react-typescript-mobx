@@ -35,8 +35,11 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/prefer-default-export': [0],
     '@typescript-eslint/indent': [2, 2],
+    '@typescript-eslint/explicit-function-return-type': [0],
     'react/jsx-props-no-spreading': [0],
+    'react/jsx-one-expression-per-line': [0],
     'no-shadow': [1],
-    '@typescript-eslint/no-explicit-any': [1]
+    '@typescript-eslint/no-explicit-any': [1],
+    'no-console': [0]
   }
 };

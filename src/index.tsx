@@ -1,21 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'mobx-react';
-import { CatalogStore } from './Store';
-import App from './containers/App';
-
-const catalogStore = new CatalogStore();
-const stores = {
-  catalogStore
-};
+import { App } from './containers/App/App';
 
 const render = (): void => {
-  ReactDOM.render(
-    <Provider {...stores}>
-      <App />
-    </Provider>,
-    document.getElementById('root')
-  );
+  ReactDOM.render(<App />, document.getElementById('root'));
 };
 
 render();
