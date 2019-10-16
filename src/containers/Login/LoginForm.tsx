@@ -6,9 +6,12 @@ import {
   Button,
   makeStyles,
   FormHelperText,
-  Snackbar
+  Snackbar,
+  Typography
 } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import InfoIcon from '@material-ui/icons/Info';
+import Popover from '@material-ui/core/Popover';
 import { AppStoreContext } from '../../stores/AppStore';
 import SnackbarContent from '../../components/SnackbarContent';
 import { Store } from '../../types';
@@ -19,6 +22,12 @@ interface AuthField {
 }
 
 const useStyles = makeStyles(() => ({
+  loginFormContainer: {
+    paddingBottom: '10px',
+    paddingTop: '10px',
+    border: '1px solid #4f4848',
+    borderRadius: '3px'
+  },
   loginForm: {
     display: 'flex',
     flexDirection: 'column'
@@ -31,7 +40,16 @@ const useStyles = makeStyles(() => ({
     minHeight: '36px'
   },
   spiner: {
-    color: 'white'
+    color: '#3f51b5'
+  },
+  infoIcon: {
+    color: 'orange',
+    alignSelf: 'center',
+    marginTop: '10px',
+    cursor: 'pointer'
+  },
+  testData: {
+    padding: '5px'
   }
 }));
 
@@ -46,6 +64,7 @@ export const LoginForm = observer(
       error: false
     });
     const [snackBarIsOpen, setDisplaySnackBar] = useState<boolean>(false);
+    const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
     const classes = useStyles();
     const store: Store = useContext<Store>(AppStoreContext);
     const {
@@ -89,7 +108,7 @@ export const LoginForm = observer(
     };
 
     return (
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" className={classes.loginFormContainer}>
         <form className={classes.loginForm} onSubmit={submitForm}>
           <TextField
             id="login"
@@ -156,6 +175,42 @@ export const LoginForm = observer(
               'LOGIN'
             )}
           </Button>
+          <InfoIcon
+            className={classes.infoIcon}
+            onClick={e => {
+              setAnchorEl(e.currentTarget);
+            }}
+          />
+          <Popover
+            open={Boolean(anchorEl)}
+            onClose={(e, reason) => {
+              if (reason === ('backdropClick' || 'escapeKeyDown'))
+                setAnchorEl(null);
+            }}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center'
+            }}
+          >
+            <Typography className={classes.testData}>
+              <b>User data for testing app:</b>
+              <br />
+              <br />
+              Login: Admin
+              <br />
+              Password: 123test
+              <br />
+              <br />
+              Login: developer
+              <br />
+              Password: 456test
+            </Typography>
+          </Popover>
         </form>
         <Snackbar
           anchorOrigin={{
