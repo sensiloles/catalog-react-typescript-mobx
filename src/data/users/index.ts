@@ -4,14 +4,12 @@ const USERS: User[] = [
   {
     id: 1,
     login: 'admin',
-    password: '123test',
-    firstName: 'Aleksey'
+    password: '123test'
   },
   {
     id: 2,
     login: 'developer',
-    password: '456test',
-    firstName: 'Alexandr'
+    password: '456test'
   }
 ];
 

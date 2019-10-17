@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AppStoreContext } from '../../stores/AppStore';
-import { LoginForm } from '../Login/LoginForm';
+import Login from '../Login';
+// import Catalog from '../Catalog';
 import { Store } from '../../types';
 import './App.scss';
 
@@ -12,7 +13,7 @@ export const App = observer(
 
     return (
       <div className="app">
-        {isLogged ? <div>Entrance success</div> : <LoginForm />}
+        {isLogged ? <div>Entrance success</div> : <Login />}
       </div>
     );
   }

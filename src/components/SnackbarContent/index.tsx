@@ -8,11 +8,11 @@ import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 
-interface SnackbarContentProps {
+interface CustomSnackbarContentProps {
   className?: string;
   message: string;
   onClose: (
-    event: React.SyntheticEvent<any>,
+    e: React.SyntheticEvent<any, Event>,
     reason?: string | undefined
   ) => void;
   variant: 'success' | 'warning' | 'error' | 'info';
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default (props: SnackbarContentProps) => {
+const CustomSnackbarContent = (props: CustomSnackbarContentProps) => {
   const classes = useStyles();
   const { className, message, onClose, variant, ...other } = props;
   const Icon: (p: IconProps) => JSX.Element = variantIcon[variant];
@@ -88,3 +88,5 @@ export default (props: SnackbarContentProps) => {
     />
   );
 };
+
+export default CustomSnackbarContent;

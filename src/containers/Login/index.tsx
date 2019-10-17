@@ -16,21 +16,37 @@ import { AppStoreContext } from '../../stores/AppStore';
 import SnackbarContent from '../../components/SnackbarContent';
 import { Store } from '../../types';
 
-interface AuthField {
-  value: string;
-  error: boolean;
+interface StateForm {
+  [key: string]: {
+    value: string;
+    error: boolean;
+  };
 }
+
+const initialStateForm: StateForm = {
+  login: {
+    value: '',
+    error: false
+  },
+  password: {
+    value: '',
+    error: false
+  }
+};
 
 const useStyles = makeStyles(() => ({
   loginFormContainer: {
-    paddingBottom: '10px',
-    paddingTop: '10px',
-    border: '1px solid #4f4848',
-    borderRadius: '3px'
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    height: '90vh'
   },
   loginForm: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    padding: '10px',
+    border: '1px solid #4f4848',
+    borderRadius: '4px'
   },
   textField: {
     marginTop: '10px'
@@ -53,16 +69,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export const LoginForm = observer(
+const Login = observer(
   (): React.ReactElement<HTMLElement> => {
-    const [login, setLogin] = useState<AuthField>({
-      value: '',
-      error: false
-    });
-    const [password, setPassword] = useState<AuthField>({
-      value: '',
-      error: false
-    });
+    const [stateForm, setStateForm] = useState<StateForm>(initialStateForm);
     const [snackBarIsOpen, setDisplaySnackBar] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
     const classes = useStyles();
@@ -76,28 +85,64 @@ export const LoginForm = observer(
     ): void => {
       e.preventDefault();
 
-      if (!login.value.length && !password.value.length) {
-        setLogin({ ...login, error: true });
-        setPassword({ ...password, error: true });
-      } else if (!login.value.length) {
-        setLogin({ ...login, error: true });
-      } else if (!password.value.length) {
-        setPassword({ ...password, error: true });
+      if (!stateForm.login.value.length && !stateForm.password.value.length) {
+        setStateForm({
+          login: {
+            ...stateForm.login,
+            error: true
+          },
+          password: {
+            ...stateForm.password,
+            error: true
+          }
+        });
+      } else if (!stateForm.login.value.length) {
+        setStateForm({
+          login: {
+            ...stateForm.login,
+            error: true
+          },
+          password: {
+            ...stateForm.password
+          }
+        });
+      } else if (!stateForm.password.value.length) {
+        setStateForm({
+          login: {
+            ...stateForm.login
+          },
+          password: {
+            ...stateForm.password,
+            error: true
+          }
+        });
       } else {
-        setLogin({ ...login, error: false });
-        setPassword({ ...password, error: false });
+        setStateForm({
+          login: {
+            ...stateForm.login,
+            error: false
+          },
+          password: {
+            ...stateForm.password,
+            error: false
+          }
+        });
       }
 
-      if (login.value && password.value) {
-        store.authUser(login.value.toLowerCase(), password.value, () => {
-          if (!store.user.error.length) return;
-          setDisplaySnackBar(true);
-        });
+      if (stateForm.login.value && stateForm.password.value) {
+        store.authUser(
+          stateForm.login.value.toLowerCase(),
+          stateForm.password.value,
+          () => {
+            if (!store.user.error.length) return;
+            setDisplaySnackBar(true);
+          }
+        );
       }
     };
 
     const handleCloseSnackBar = (
-      event: React.SyntheticEvent<any>,
+      e: React.SyntheticEvent<any, Event>,
       reason?: string | undefined
     ): void | undefined => {
       if (reason === 'clickaway') {
@@ -115,22 +160,29 @@ export const LoginForm = observer(
             className={classes.textField}
             type="text"
             autoComplete="username"
-            value={login.value}
-            onChange={e => {
-              setLogin({ value: e.target.value, ...login });
-              if (!e.target.value.length) {
-                setLogin({ value: e.target.value, error: true });
+            value={stateForm.login.value}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ): void => {
+              if (!e.currentTarget.value.length) {
+                setStateForm({
+                  ...stateForm,
+                  login: { value: e.currentTarget.value, error: true }
+                });
               } else {
-                setLogin({ value: e.target.value, error: false });
+                setStateForm({
+                  ...stateForm,
+                  login: { value: e.currentTarget.value, error: false }
+                });
               }
             }}
             variant="outlined"
             label="login"
-            error={login.error}
+            error={stateForm.login.error}
             disabled={dataIsLoading}
           />
-          {login.error ? (
-            <FormHelperText id="my-helper-text" error={login.error}>
+          {stateForm.login.error ? (
+            <FormHelperText id="my-helper-text" error={stateForm.login.error}>
               Login field cannot be empty
             </FormHelperText>
           ) : null}
@@ -139,22 +191,32 @@ export const LoginForm = observer(
             className={classes.textField}
             type="password"
             autoComplete="current-password"
-            value={password.value}
-            onChange={e => {
-              setPassword({ value: e.target.value, ...password });
-              if (!e.target.value.length) {
-                setPassword({ value: e.target.value, error: true });
+            value={stateForm.password.value}
+            onChange={(
+              e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ): void => {
+              if (!e.currentTarget.value.length) {
+                setStateForm({
+                  ...stateForm,
+                  password: { value: e.currentTarget.value, error: true }
+                });
               } else {
-                setPassword({ value: e.target.value, error: false });
+                setStateForm({
+                  ...stateForm,
+                  password: { value: e.currentTarget.value, error: false }
+                });
               }
             }}
             variant="outlined"
             label="password"
-            error={password.error}
+            error={stateForm.password.error}
             disabled={dataIsLoading}
           />
-          {password.error ? (
-            <FormHelperText id="my-helper-text" error={password.error}>
+          {stateForm.password.error ? (
+            <FormHelperText
+              id="my-helper-text"
+              error={stateForm.password.error}
+            >
               Password field cannot be empty
             </FormHelperText>
           ) : null}
@@ -163,7 +225,9 @@ export const LoginForm = observer(
             variant="contained"
             color="primary"
             className={classes.loginButton}
-            disabled={dataIsLoading || login.error || password.error}
+            disabled={
+              dataIsLoading || stateForm.login.error || stateForm.password.error
+            }
           >
             {dataIsLoading ? (
               <CircularProgress
@@ -177,13 +241,13 @@ export const LoginForm = observer(
           </Button>
           <InfoIcon
             className={classes.infoIcon}
-            onClick={e => {
+            onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
               setAnchorEl(e.currentTarget);
             }}
           />
           <Popover
             open={Boolean(anchorEl)}
-            onClose={(e, reason) => {
+            onClose={(e: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
               if (reason === ('backdropClick' || 'escapeKeyDown'))
                 setAnchorEl(null);
             }}
@@ -201,7 +265,7 @@ export const LoginForm = observer(
               <b>User data for testing app:</b>
               <br />
               <br />
-              Login: Admin
+              Login: admin
               <br />
               Password: 123test
               <br />
@@ -231,3 +295,5 @@ export const LoginForm = observer(
     );
   }
 );
+
+export default Login;

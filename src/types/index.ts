@@ -16,5 +16,4 @@ export interface User {
   id?: number | undefined;
   login: string;
   password: string;
-  firstName?: string;
 }
