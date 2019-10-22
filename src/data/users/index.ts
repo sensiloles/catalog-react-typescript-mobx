@@ -1,33 +1,45 @@
-import { User } from '../../types';
+import { IUser, IUserData } from '../../types';
 
-const USERS: User[] = [
+const USERS: IUser[] = [
   {
-    id: 1,
     login: 'admin',
     password: '123test'
   },
   {
-    id: 2,
     login: 'developer',
     password: '456test'
   }
 ];
 
-const getUser = ({ login, password }: User) => {
-  return new Promise<User>((resolve, reject) => {
-    let result: User | undefined;
+const getIUser: ({ login, password }: IUser) => Promise<IUserData> = ({
+  login,
+  password
+}: IUser): Promise<IUserData> => {
+  return new Promise<IUserData>(
+    (
+      resolve: (result: IUserData) => void,
+      reject: (error: Error) => void
+    ): void => {
+      let result: IUserData | undefined;
 
-    USERS.forEach((user: User) => {
-      if (user.login === login && user.password === password) result = user;
-    });
+      USERS.forEach((user: IUser): void => {
+        if (user.login === login && user.password === password) {
+          const deletedKey = 'password';
+          const { [deletedKey]: deleted, ...userData } = user;
+          result = userData;
+        }
+      });
 
-    if (result) {
-      setTimeout(() => resolve(result), 3000);
-    } else {
-      const error = new Error('Incorrect login or password');
-      setTimeout(() => reject(error), 3000);
+      if (result) {
+        setTimeout((): void => resolve(result as IUserData), 3000);
+      } else {
+        setTimeout(
+          (): void => reject(new Error('Incorrect login or password')),
+          3000
+        );
+      }
     }
-  });
+  );
 };
 
-export default getUser;
+export default getIUser;

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Container,
@@ -12,9 +12,8 @@ import {
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfoIcon from '@material-ui/icons/Info';
 import Popover from '@material-ui/core/Popover';
-import { AppStoreContext } from '../../stores/AppStore';
+import { useStores } from '../../hooks/useStores';
 import SnackbarContent from '../../components/SnackbarContent';
-import { Store } from '../../types';
 
 interface StateForm {
   [key: string]: {
@@ -71,14 +70,20 @@ const useStyles = makeStyles(() => ({
 
 const Login = observer(
   (): React.ReactElement<HTMLElement> => {
-    const [stateForm, setStateForm] = useState<StateForm>(initialStateForm);
-    const [snackBarIsOpen, setDisplaySnackBar] = useState<boolean>(false);
-    const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
+    const [stateForm, setStateForm]: [
+      StateForm,
+      (state: StateForm) => void
+    ] = useState<StateForm>(initialStateForm);
+    const [snackBarIsOpen, setDisplaySnackBar]: [
+      boolean,
+      (open: boolean) => void
+    ] = useState<boolean>(false);
+    const [anchorEl, setAnchorEl]: [
+      SVGSVGElement | null,
+      (e: SVGSVGElement | null) => void
+    ] = useState<SVGSVGElement | null>(null);
     const classes = useStyles();
-    const store: Store = useContext<Store>(AppStoreContext);
-    const {
-      user: { dataIsLoading, error }
-    } = store;
+    const { userStore } = useStores();
 
     const submitForm: (e: React.FormEvent<HTMLFormElement>) => void = (
       e: React.FormEvent<HTMLFormElement>
@@ -130,11 +135,11 @@ const Login = observer(
       }
 
       if (stateForm.login.value && stateForm.password.value) {
-        store.authUser(
+        userStore.authUser(
           stateForm.login.value.toLowerCase(),
           stateForm.password.value,
           () => {
-            if (!store.user.error.length) return;
+            if (!userStore.error.length) return;
             setDisplaySnackBar(true);
           }
         );
@@ -179,7 +184,7 @@ const Login = observer(
             variant="outlined"
             label="login"
             error={stateForm.login.error}
-            disabled={dataIsLoading}
+            disabled={userStore.dataIsLoading}
           />
           {stateForm.login.error ? (
             <FormHelperText id="my-helper-text" error={stateForm.login.error}>
@@ -210,7 +215,7 @@ const Login = observer(
             variant="outlined"
             label="password"
             error={stateForm.password.error}
-            disabled={dataIsLoading}
+            disabled={userStore.dataIsLoading}
           />
           {stateForm.password.error ? (
             <FormHelperText
@@ -226,10 +231,12 @@ const Login = observer(
             color="primary"
             className={classes.loginButton}
             disabled={
-              dataIsLoading || stateForm.login.error || stateForm.password.error
+              userStore.dataIsLoading ||
+              stateForm.login.error ||
+              stateForm.password.error
             }
           >
-            {dataIsLoading ? (
+            {userStore.dataIsLoading ? (
               <CircularProgress
                 color="secondary"
                 size={20}
@@ -281,14 +288,14 @@ const Login = observer(
             vertical: 'bottom',
             horizontal: 'center'
           }}
-          open={snackBarIsOpen && !dataIsLoading}
+          open={snackBarIsOpen && !userStore.dataIsLoading}
           autoHideDuration={8000}
           onClose={handleCloseSnackBar}
         >
           <SnackbarContent
             onClose={handleCloseSnackBar}
             variant="error"
-            message={`${error}. Please re-enter the form`}
+            message={`${userStore.error}. Please re-enter the form`}
           />
         </Snackbar>
       </Container>

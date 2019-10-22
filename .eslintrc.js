@@ -42,6 +42,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': [0],
     'no-shadow': [1],
     '@typescript-eslint/no-explicit-any': [1],
-    'no-console': [0]
+    '@typescript-eslint/interface-name-prefix': [0],
+    'no-underscore-dangle': [0]
   }
 };

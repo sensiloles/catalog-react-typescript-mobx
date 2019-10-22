@@ -1,20 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { AppStoreContext } from '../../stores/AppStore';
+import { useStores } from '../../hooks/useStores';
+import Catalog from '../Catalog';
 import Login from '../Login';
-// import Catalog from '../Catalog';
-import { Store } from '../../types';
 import './App.scss';
 
 export const App = observer(
   (): React.ReactElement<HTMLElement> => {
-    const store: Store = useContext<Store>(AppStoreContext);
-    const { isLogged } = store.user;
+    const { userStore } = useStores();
 
     return (
-      <div className="app">
-        {isLogged ? <div>Entrance success</div> : <Login />}
-      </div>
+      <div className="app">{!userStore.isLogged ? <Catalog /> : <Login />}</div>
     );
   }
 );

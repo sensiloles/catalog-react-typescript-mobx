@@ -7,6 +7,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 
 interface CustomSnackbarContentProps {
   className?: string;
@@ -16,10 +17,6 @@ interface CustomSnackbarContentProps {
     reason?: string | undefined
   ) => void;
   variant: 'success' | 'warning' | 'error' | 'info';
-}
-
-interface IconProps {
-  className: string;
 }
 
 const variantIcon = {
@@ -58,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 const CustomSnackbarContent = (props: CustomSnackbarContentProps) => {
   const classes = useStyles();
   const { className, message, onClose, variant, ...other } = props;
-  const Icon: (p: IconProps) => JSX.Element = variantIcon[variant];
+  const Icon: React.ComponentType<SvgIconProps> = variantIcon[variant];
 
   return (
     <SnackbarContent
