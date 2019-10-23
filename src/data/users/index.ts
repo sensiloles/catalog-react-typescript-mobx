@@ -1,6 +1,6 @@
 import { IUser, IUserData } from '../../types';
 
-const USERS: IUser[] = [
+const FAKE_USERS: IUser[] = [
   {
     login: 'admin',
     password: '123test'
@@ -22,7 +22,7 @@ const getIUser: ({ login, password }: IUser) => Promise<IUserData> = ({
     ): void => {
       let result: IUserData | undefined;
 
-      USERS.forEach((user: IUser): void => {
+      FAKE_USERS.forEach((user: IUser): void => {
         if (user.login === login && user.password === password) {
           const deletedKey = 'password';
           const { [deletedKey]: deleted, ...userData } = user;

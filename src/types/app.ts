@@ -1,7 +1,4 @@
-import { IUserStore } from './user';
-import { ICatalogStore } from './catalog';
-
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IAppStore {
-  readonly userStore: IUserStore;
-  readonly catalogStore: ICatalogStore;
+  // something properties
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { TextField, FormControl, Button, makeStyles } from '@material-ui/core/';
 // import EditIcon from '@material-ui/icons/Edit';
-import { useStores } from '../../hooks/useStores';
+import useStores from '../../hooks/useStores';
 import SelectorCategory from './SelectorCategory';
 import ProductList from './ProductList';
 // import { IAppStore, ICategories, ICategory } from '../../types';
@@ -38,7 +38,7 @@ const Catalog = observer(() => {
   const [categoryId, selectCategoryId] = useState<number>(0);
   const classes = useStyles();
   const {
-    catalogStore: { categories }
+    catalogStore: { categories, products }
   } = useStores();
 
   const handleChangeCategory = (
@@ -87,7 +87,11 @@ const Catalog = observer(() => {
           Add
         </Button>
       </div>
-      <ProductList className={classes.productsList} />
+      <ProductList
+        className={classes.productsList}
+        categories={categories}
+        products={products}
+      />
     </div>
   );
 });

@@ -2,13 +2,17 @@ import { UserStore } from './UserStore';
 import { CatalogStore } from './CatalogStore';
 import { IAppStore, IUserStore, ICatalogStore } from '../types';
 
-export class AppStore implements IAppStore {
-  readonly userStore: IUserStore;
+export class AppStoreModel implements IAppStore {
+  readonly _userStore: IUserStore;
 
-  readonly catalogStore: ICatalogStore;
+  readonly _catalogStore: ICatalogStore;
 
   constructor() {
-    this.userStore = new UserStore(this);
-    this.catalogStore = CatalogStore(this);
+    this._userStore = UserStore(this as IAppStore);
+    this._catalogStore = CatalogStore(this as IAppStore);
   }
+}
+
+export function AppStore(): IAppStore {
+  return new AppStoreModel();
 }

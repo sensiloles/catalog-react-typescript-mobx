@@ -2,7 +2,6 @@ export interface ICatalogStore {
   categories: ICategories;
   products: IProducts;
   getCategory: (id: number) => ICategory;
-  // addProduct: (product: IProduct) => void;
 }
 
 export interface ICategories {

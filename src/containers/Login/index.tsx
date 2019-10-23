@@ -12,7 +12,7 @@ import {
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InfoIcon from '@material-ui/icons/Info';
 import Popover from '@material-ui/core/Popover';
-import { useStores } from '../../hooks/useStores';
+import useStores from '../../hooks/useStores';
 import SnackbarContent from '../../components/SnackbarContent';
 
 interface StateForm {

@@ -8,6 +8,8 @@ import {
 } from '../types';
 
 class CatalogStoreModel implements ICatalogStore {
+  readonly _appStore: IAppStore;
+
   @observable categories: ICategories = {
     1: { name: 'test' },
     2: { name: 'test2' },
@@ -20,19 +22,13 @@ class CatalogStoreModel implements ICatalogStore {
     { id: 3, name: 'test product 4', categoryId: 3 }
   ];
 
-  private _nextId = 4;
-
-  public constructor(private appStore: IAppStore) {
-    console.log(appStore);
+  public constructor(AppStore: IAppStore) {
+    this._appStore = AppStore;
   }
 
   public getCategory(id: number): ICategory {
     return this.categories[id];
   }
-
-  // public getProducts(): IProducts {
-  //   return this.products;
-  // }
 }
 
 export function CatalogStore(appStore: IAppStore): ICatalogStore {

@@ -1,7 +1,7 @@
 {
-  "name": "catalog-velvetech",
+  "name": "catalog-react-typescript-mobx",
   "version": "1.0.0",
-  "description": "Implementation test task for velvetech",
+  "description": "Implementation catalog for practice",
   "homepage": "https://github.com/sensiloles/catalog-velvetech#readme",
   "bugs": {
     "url": "https://github.com/sensiloles/catalog-velvetech/issues"
@@ -12,11 +12,12 @@
   },
   "license": "ISC",
   "author": "Aleksey Filippov",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.babel.ts --progress --colors",
-    "start": "webpack-dev-server --config webpack.config.babel.ts --progress --colors --open",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src -c .eslintrc.js --color --ext ts,tsx,js,jsx",
+    "start": "webpack-dev-server --config webpack.config.babel.ts --progress --colors --open"
   },
   "dependencies": {
     "@material-ui/core": "^4.5.0",

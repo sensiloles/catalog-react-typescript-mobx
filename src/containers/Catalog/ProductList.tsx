@@ -8,18 +8,16 @@ import {
   ListItemText
 } from '@material-ui/core/';
 import FolderIcon from '@material-ui/icons/Folder';
-import { useStores } from '../../hooks/useStores';
-import { IProduct } from '../../types';
+import { ICategories, IProducts, IProduct } from '../../types';
 
 interface ProductListProps {
   className: string;
+  categories: ICategories;
+  products: IProducts;
 }
 
 const ProductList = observer(
-  ({ className }: ProductListProps): JSX.Element => {
-    const { catalogStore } = useStores();
-    const { categories, products } = catalogStore;
-
+  ({ className, categories, products }: ProductListProps): JSX.Element => {
     const content = products.map((product: IProduct) => (
       <ListItem key={product.id}>
         <ListItemAvatar>

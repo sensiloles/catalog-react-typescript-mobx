@@ -2,7 +2,7 @@ import { observable, action } from 'mobx';
 import getUser from '../data/users';
 import { IAppStore, IUserStore, IUserData } from '../types';
 
-export class UserStore implements IUserStore {
+class UserStoreModel implements IUserStore {
   readonly _appStore: IAppStore;
 
   @observable login = '';
@@ -32,4 +32,8 @@ export class UserStore implements IUserStore {
       cb();
     }
   }
+}
+
+export function UserStore(appStore: IAppStore): IUserStore {
+  return new UserStoreModel(appStore);
 }
