@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, Reducer } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
   Container,
@@ -14,24 +14,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import Popover from '@material-ui/core/Popover';
 import useStores from '../../hooks/useStores';
 import SnackbarContent from '../../components/SnackbarContent';
-
-interface StateForm {
-  [key: string]: {
-    value: string;
-    error: boolean;
-  };
-}
-
-const initialStateForm: StateForm = {
-  login: {
-    value: '',
-    error: false
-  },
-  password: {
-    value: '',
-    error: false
-  }
-};
 
 const useStyles = makeStyles(() => ({
   loginFormContainer: {
@@ -68,20 +50,86 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+interface StateForm {
+  login: {
+    value: string;
+    error: boolean;
+  };
+  password: {
+    value: string;
+    error: boolean;
+  };
+}
+
+interface Action {
+  type: ActionType;
+  value?: string;
+}
+
+type ActionType =
+  | 'setLoginError'
+  | 'setPasswordError'
+  | 'setLoginValue'
+  | 'setPasswordValue';
+
+const initialStateForm: StateForm = {
+  login: {
+    value: '',
+    error: false
+  },
+  password: {
+    value: '',
+    error: false
+  }
+};
+
+function formReducer(state: StateForm, action: Action): StateForm {
+  switch (action.type) {
+    case 'setLoginError':
+      return {
+        ...state,
+        login: {
+          ...state.login,
+          error: true
+        }
+      };
+    case 'setPasswordError':
+      return {
+        ...state,
+        password: {
+          ...state.password,
+          error: true
+        }
+      };
+    case 'setLoginValue':
+      return {
+        ...state,
+        login: {
+          value: action.value || '',
+          error: false
+        }
+      };
+    case 'setPasswordValue':
+      return {
+        ...state,
+        password: {
+          value: action.value || '',
+          error: false
+        }
+      };
+    default:
+      return { ...state };
+  }
+}
+
 const Login = observer(
   (): React.ReactElement<HTMLElement> => {
-    const [stateForm, setStateForm]: [
-      StateForm,
-      (state: StateForm) => void
-    ] = useState<StateForm>(initialStateForm);
-    const [snackBarIsOpen, setDisplaySnackBar]: [
-      boolean,
-      (open: boolean) => void
-    ] = useState<boolean>(false);
-    const [anchorEl, setAnchorEl]: [
-      SVGSVGElement | null,
-      (e: SVGSVGElement | null) => void
-    ] = useState<SVGSVGElement | null>(null);
+    const [stateForm, setStateForm] = useReducer<Reducer<StateForm, Action>>(
+      formReducer,
+      initialStateForm
+    );
+    const [snackBarIsOpen, setDisplaySnackBar] = useState<boolean>(false);
+    const [anchorEl, setAnchorEl] = useState<SVGSVGElement | null>(null);
     const classes = useStyles();
     const { userStore } = useStores();
 
@@ -90,51 +138,14 @@ const Login = observer(
     ): void => {
       e.preventDefault();
 
-      if (!stateForm.login.value.length && !stateForm.password.value.length) {
-        setStateForm({
-          login: {
-            ...stateForm.login,
-            error: true
-          },
-          password: {
-            ...stateForm.password,
-            error: true
-          }
-        });
-      } else if (!stateForm.login.value.length) {
-        setStateForm({
-          login: {
-            ...stateForm.login,
-            error: true
-          },
-          password: {
-            ...stateForm.password
-          }
-        });
-      } else if (!stateForm.password.value.length) {
-        setStateForm({
-          login: {
-            ...stateForm.login
-          },
-          password: {
-            ...stateForm.password,
-            error: true
-          }
-        });
+      if (!stateForm.login.value && !stateForm.password.value) {
+        setStateForm({ type: 'setLoginError' });
+        setStateForm({ type: 'setPasswordError' });
+      } else if (!stateForm.login.value) {
+        setStateForm({ type: 'setLoginError' });
+      } else if (!stateForm.password.value) {
+        setStateForm({ type: 'setPasswordError' });
       } else {
-        setStateForm({
-          login: {
-            ...stateForm.login,
-            error: false
-          },
-          password: {
-            ...stateForm.password,
-            error: false
-          }
-        });
-      }
-
-      if (stateForm.login.value && stateForm.password.value) {
         userStore.authUser(
           stateForm.login.value.toLowerCase(),
           stateForm.password.value,
@@ -169,16 +180,12 @@ const Login = observer(
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ): void => {
+              setStateForm({
+                type: 'setLoginValue',
+                value: e.currentTarget.value
+              });
               if (!e.currentTarget.value.length) {
-                setStateForm({
-                  ...stateForm,
-                  login: { value: e.currentTarget.value, error: true }
-                });
-              } else {
-                setStateForm({
-                  ...stateForm,
-                  login: { value: e.currentTarget.value, error: false }
-                });
+                setStateForm({ type: 'setLoginError' });
               }
             }}
             variant="outlined"
@@ -200,16 +207,12 @@ const Login = observer(
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
             ): void => {
+              setStateForm({
+                type: 'setPasswordValue',
+                value: e.currentTarget.value
+              });
               if (!e.currentTarget.value.length) {
-                setStateForm({
-                  ...stateForm,
-                  password: { value: e.currentTarget.value, error: true }
-                });
-              } else {
-                setStateForm({
-                  ...stateForm,
-                  password: { value: e.currentTarget.value, error: false }
-                });
+                setStateForm({ type: 'setPasswordError' });
               }
             }}
             variant="outlined"
