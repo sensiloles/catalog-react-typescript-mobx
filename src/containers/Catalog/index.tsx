@@ -1,99 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextField, FormControl, Button, makeStyles } from '@material-ui/core/';
-// import EditIcon from '@material-ui/icons/Edit';
+import { makeStyles } from '@material-ui/core/';
 import useStores from '../../hooks/useStores';
-import SelectorCategory from './SelectorCategory';
-import ProductList from './ProductList';
-// import { IAppStore, ICategories, ICategory } from '../../types';
+import ProductList from './Product/ProductList';
+import ProductForm from './Product/ProductForm';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   catalog: {
     display: 'flex',
-    flexDirection: 'row',
-    margin: '20px 50px'
-  },
-  formAddProduct: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '500px'
-  },
-  productProps: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  inputSelectCategory: {
-    marginLeft: '2px'
-  },
-  buttonAdd: {
-    marginTop: '5px'
-  },
-  productsList: {
-    marginLeft: '50px'
+    margin: '20px 0px',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      margin: '10px 0px'
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: '20px 100px'
+    }
   }
 }));
 
-const Catalog = observer(() => {
-  const [productName, setProductName] = useState<string>('');
-  const [categoryId, selectCategoryId] = useState<number>(0);
-  const classes = useStyles();
-  const {
-    catalogStore: { categories, products }
-  } = useStores();
+const Catalog: React.FC<{}> = observer(
+  (): React.ReactElement => {
+    const {
+      catalogStore: { categories, products, addProduct }
+    } = useStores();
+    const classes = useStyles();
 
-  const handleChangeCategory = (
-    event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: unknown;
-    }>
-  ) => {
-    selectCategoryId(Number(event.target.value));
-  };
-
-  const handleClickButtonAdd = () => {
-    // products.addProduct({ name: productName, categoryId });
-  };
-
-  return (
-    <div className={classes.catalog}>
-      <div className={classes.formAddProduct}>
-        <FormControl className={classes.productProps}>
-          <TextField
-            type="text"
-            variant="outlined"
-            placeholder="Enter product name"
-            onChange={e => {
-              setProductName(e.currentTarget.value);
-            }}
-            value={productName}
-            hiddenLabel
-            fullWidth
-          />
-          <SelectorCategory
-            className={classes.inputSelectCategory}
-            categories={categories}
-            categoryId={categoryId}
-            onChangeCategory={handleChangeCategory}
-          />
-        </FormControl>
-        {/* <EditIcon fontSize="small" /> */}
-        <Button
-          type="button"
-          variant="outlined"
-          color="primary"
-          onClick={handleClickButtonAdd}
-          className={classes.buttonAdd}
-        >
-          Add
-        </Button>
+    return (
+      <div className={classes.catalog}>
+        <ProductForm action="add" submitForm={addProduct} />
+        <ProductList categories={categories} products={products} />
       </div>
-      <ProductList
-        className={classes.productsList}
-        categories={categories}
-        products={products}
-      />
-    </div>
-  );
-});
+    );
+  }
+);
 
 export default Catalog;

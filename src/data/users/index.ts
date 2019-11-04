@@ -11,7 +11,7 @@ const FAKE_USERS: IUser[] = [
   }
 ];
 
-const getIUser: ({ login, password }: IUser) => Promise<IUserData> = ({
+const getUser: ({ login, password }: IUser) => Promise<IUserData> = ({
   login,
   password
 }: IUser): Promise<IUserData> => {
@@ -25,6 +25,7 @@ const getIUser: ({ login, password }: IUser) => Promise<IUserData> = ({
       FAKE_USERS.forEach((user: IUser): void => {
         if (user.login === login && user.password === password) {
           const deletedKey = 'password';
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [deletedKey]: deleted, ...userData } = user;
           result = userData;
         }
@@ -42,4 +43,4 @@ const getIUser: ({ login, password }: IUser) => Promise<IUserData> = ({
   );
 };
 
-export default getIUser;
+export default getUser;

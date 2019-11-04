@@ -1,11 +1,16 @@
 export interface ICatalogStore {
   categories: ICategories;
   products: IProducts;
-  getCategory: (id: number) => ICategory;
+  removeCategory: (categoryId: number) => void;
+  editCategory: (categoryId: number, props: ICategory) => void;
+  addCategory: (props: ICategory) => void;
+  addProduct: (props: Omit<IProduct, 'id'>) => void;
+  removeProduct: (productId: number) => void;
+  editProduct: (props: IProduct) => void;
 }
 
 export interface ICategories {
-  [key: number]: ICategory;
+  [prop: number]: ICategory;
 }
 
 export interface ICategory {
@@ -15,7 +20,7 @@ export interface ICategory {
 export type IProducts = IProduct[];
 
 export interface IProduct {
-  id: number;
+  id?: number;
   name: string;
   categoryId: number;
 }

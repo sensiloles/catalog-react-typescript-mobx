@@ -52,7 +52,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CustomSnackbarContent = (props: CustomSnackbarContentProps) => {
+const CustomSnackbarContent = (
+  props: CustomSnackbarContentProps
+): React.ReactElement => {
   const classes = useStyles();
   const { className, message, onClose, variant, ...other } = props;
   const Icon: React.ComponentType<SvgIconProps> = variantIcon[variant];

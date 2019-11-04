@@ -5,7 +5,8 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:jsx-a11y/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'prettier/@typescript-eslint'
   ],
   parser: '@typescript-eslint/parser',
   plugins: [
@@ -25,6 +26,9 @@ module.exports = {
     },
     'import/resolver': {
       typescript: {}
+    },
+    react: {
+      version: 'detect'
     }
   },
   rules: {
@@ -36,13 +40,15 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/prefer-default-export': [0],
-    '@typescript-eslint/indent': [2, 2],
-    '@typescript-eslint/explicit-function-return-type': [0],
     'react/jsx-props-no-spreading': [0],
     'react/jsx-one-expression-per-line': [0],
     'no-shadow': [1],
     '@typescript-eslint/no-explicit-any': [1],
     '@typescript-eslint/interface-name-prefix': [0],
-    'no-underscore-dangle': [0]
+    'no-underscore-dangle': [0],
+    'react/jsx-wrap-multilines': [
+      'error',
+      { declaration: false, assignment: false }
+    ]
   }
 };

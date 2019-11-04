@@ -1,10 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Select, MenuItem } from '@material-ui/core/';
-import { ICategories } from '../../types';
+import { ICategories } from '../../../types';
 
-interface SelectorCategoryProps {
-  className: string;
+interface SelectCategoryProps {
+  className?: string;
   categories: ICategories;
   categoryId: number;
   onChangeCategory: (
@@ -15,18 +15,18 @@ interface SelectorCategoryProps {
   ) => void;
 }
 
-const SelectorCategory = observer(
+const SelectCategory: React.FC<SelectCategoryProps> = observer(
   ({
     className,
     categories,
     categoryId,
     onChangeCategory
-  }: SelectorCategoryProps) => {
+  }: SelectCategoryProps): React.ReactElement => {
     const categoriesKeys = Object.keys(categories);
 
     return (
       <Select
-        value={categoryId}
+        value={categories[categoryId] ? categoryId : 0}
         onChange={onChangeCategory}
         className={className}
         variant="outlined"
@@ -34,9 +34,7 @@ const SelectorCategory = observer(
         fullWidth
         style={{ maxWidth: '40%' }}
       >
-        <MenuItem value={0} disabled>
-          Category
-        </MenuItem>
+        <MenuItem value={0}>Select category</MenuItem>
         {categoriesKeys.map((id: string) => (
           <MenuItem key={id} value={id}>
             {categories[Number(id)].name}
@@ -47,4 +45,4 @@ const SelectorCategory = observer(
   }
 );
 
-export default SelectorCategory;
+export default SelectCategory;

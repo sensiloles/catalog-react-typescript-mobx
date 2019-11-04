@@ -1,10 +1,8 @@
 import { observable, action } from 'mobx';
 import getUser from '../data/users';
-import { IAppStore, IUserStore, IUserData } from '../types';
+import { IUserStore, IUserData } from '../types';
 
 class UserStoreModel implements IUserStore {
-  readonly _appStore: IAppStore;
-
   @observable login = '';
 
   @observable error = '';
@@ -13,11 +11,11 @@ class UserStoreModel implements IUserStore {
 
   @observable isLogged = false;
 
-  constructor(AppStore: IAppStore) {
-    this._appStore = AppStore;
-  }
-
-  @action async authUser(login: string, password: string, cb: () => void) {
+  @action async authUser(
+    login: string,
+    password: string,
+    cb: () => void
+  ): Promise<void> {
     this.dataIsLoading = true;
     try {
       const userData: IUserData = await getUser({ login, password });
@@ -34,6 +32,6 @@ class UserStoreModel implements IUserStore {
   }
 }
 
-export function UserStore(appStore: IAppStore): IUserStore {
-  return new UserStoreModel(appStore);
+export function UserStore(): IUserStore {
+  return new UserStoreModel();
 }

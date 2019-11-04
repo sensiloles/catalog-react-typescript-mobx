@@ -5,8 +5,8 @@ import Catalog from '../Catalog';
 import Login from '../Login';
 import './App.scss';
 
-export const App = observer(
-  (): React.ReactElement<HTMLElement> => {
+export const App: React.FC = observer(
+  (): React.ReactElement => {
     const { userStore } = useStores();
 
     return (
