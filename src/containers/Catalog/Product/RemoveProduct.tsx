@@ -11,8 +11,8 @@ import {
 import useStores from '../../../hooks/useStores';
 
 interface RemoveProductProps {
-  removableProduct: number | null;
-  setRemovableProduct: (id: number | null) => void;
+  removableProduct: number;
+  setRemovableProduct: (id: number) => void;
 }
 
 const RemoveProduct: React.FC<RemoveProductProps> = observer(
@@ -25,10 +25,10 @@ const RemoveProduct: React.FC<RemoveProductProps> = observer(
     } = useStores();
 
     const handleClickCloseDialog = (): void => {
-      setRemovableProduct(null);
+      setRemovableProduct(0);
     };
 
-    return (
+    const content = removableProduct ? (
       <Dialog
         open={Boolean(removableProduct)}
         onClose={handleClickCloseDialog}
@@ -57,7 +57,9 @@ const RemoveProduct: React.FC<RemoveProductProps> = observer(
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    ) : null;
+
+    return <>{content}</>;
   }
 );
 

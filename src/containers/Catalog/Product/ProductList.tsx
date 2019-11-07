@@ -51,10 +51,8 @@ const ProductList: React.FC<ProductListProps> = observer(
     } = useStores();
     const classes = useStyles();
 
-    const [removableProduct, setRemovableProduct] = useState<number | null>(
-      null
-    );
-    const [editableProduct, setEditableProduct] = useState<number | null>(null);
+    const [removableProduct, setRemovableProduct] = useState<number>(0);
+    const [editableProduct, setEditableProduct] = useState<number>(0);
 
     const content = products.map((product: IProduct) => (
       <ListItem key={product.id} className={classes.productItem}>

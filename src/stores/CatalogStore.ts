@@ -20,11 +20,17 @@ class CatalogStoreModel implements ICatalogStore {
 
   _nextCategoryId: number;
 
+  _nextProductId: number;
+
   public constructor({ categories, products }: CatalogStoreProps) {
     this.categories = categories;
     this.products = products;
     this._nextCategoryId =
       getMaxOfArray(Object.keys(this.categories).map(id => Number(id))) + 1;
+    this._nextProductId =
+      getMaxOfArray(
+        this.products.map((product: IProduct) => Number(product.id))
+      ) + 1;
 
     this.bindMethods();
   }
@@ -36,6 +42,7 @@ class CatalogStoreModel implements ICatalogStore {
     this.addProduct = this.addProduct.bind(this);
     this.removeProduct = this.removeProduct.bind(this);
     this.editProduct = this.editProduct.bind(this);
+    this.getProduct = this.getProduct.bind(this);
   }
 
   @action public removeCategory(categoryId: number): void {
@@ -61,13 +68,13 @@ class CatalogStoreModel implements ICatalogStore {
   }
 
   @action public addProduct({ name, categoryId }: Omit<IProduct, 'id'>): void {
-    const id = this.products.length + 1;
-
     this.products.push({
-      id,
+      id: this._nextProductId,
       name,
       categoryId
     });
+
+    this._nextProductId += 1;
   }
 
   @action public removeProduct(productId: number): void {
@@ -89,6 +96,16 @@ class CatalogStoreModel implements ICatalogStore {
         return product;
       }
     );
+  }
+
+  public getProduct(id: number): IProduct {
+    const result = this.products.filter(
+      (product: IProduct) => product.id === id
+    )[0];
+
+    if (!result) throw new Error('Product not found');
+
+    return result;
   }
 }
 

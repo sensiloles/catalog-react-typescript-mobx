@@ -2,13 +2,13 @@
   "name": "catalog-react-typescript-mobx",
   "version": "1.0.0",
   "description": "Implementation catalog for practice",
-  "homepage": "https://github.com/sensiloles/catalog-velvetech#readme",
+  "homepage": "https://github.com/sensiloles/catalog-react-typescript-mobx#readme",
   "bugs": {
-    "url": "https://github.com/sensiloles/catalog-velvetech/issues"
+    "url": "https://github.com/sensiloles/catalog-react-typescript-mobx/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sensiloles/catalog-velvetech.git"
+    "url": "git+https://github.com/sensiloles/catalog-react-typescript-mobx.git"
   },
   "license": "ISC",
   "author": "Aleksey Filippov",

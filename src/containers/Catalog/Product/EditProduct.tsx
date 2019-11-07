@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 
 interface EditProductProps {
   editableProduct: number | null;
-  setEditableProduct: (id: number | null) => void;
+  setEditableProduct: (id: number) => void;
 }
 
 const EditProduct: React.FC<EditProductProps> = observer(
@@ -34,10 +34,10 @@ const EditProduct: React.FC<EditProductProps> = observer(
     const styles = useStyles();
 
     const handleClickCloseDialog = (): void => {
-      setEditableProduct(null);
+      setEditableProduct(0);
     };
 
-    return (
+    const content = editableProduct ? (
       <Dialog
         open={Boolean(editableProduct)}
         onClose={handleClickCloseDialog}
@@ -56,10 +56,13 @@ const EditProduct: React.FC<EditProductProps> = observer(
             productId={editableProduct}
             submitForm={editProduct}
             handleClickCloseDialog={handleClickCloseDialog}
+            fullWidth
           />
         </DialogActions>
       </Dialog>
-    );
+    ) : null;
+
+    return <>{content}</>;
   }
 );
 

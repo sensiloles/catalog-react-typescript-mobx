@@ -28,7 +28,7 @@ const Catalog: React.FC<{}> = observer(
 
     return (
       <div className={classes.catalog}>
-        <ProductForm action="add" submitForm={addProduct} />
+        <ProductForm action="add" submitForm={addProduct} fullWidth={false} />
         <ProductList categories={categories} products={products} />
       </div>
     );

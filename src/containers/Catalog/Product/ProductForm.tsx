@@ -6,13 +6,17 @@ import SelectCategory from '../Category/SelectCategory';
 import EditCategory from '../Category/EditCategory';
 import { IProduct } from '../../../types/catalog';
 
+interface StylesProps {
+  fullWidth: boolean;
+}
+
 const useStyles = makeStyles(() => ({
   productAddForm: {
     display: 'flex',
     flexWrap: 'wrap',
     flexDirection: 'column',
     alignItems: 'center',
-    minWidth: '25%'
+    minWidth: (props: StylesProps): string => (props.fullWidth ? '100%' : '25%')
   },
   productProps: {
     flexDirection: 'row',
@@ -30,9 +34,10 @@ const useStyles = makeStyles(() => ({
 
 interface ProductFormProps {
   action: string;
-  productId?: number | null;
+  productId?: number;
   submitForm: (props: IProduct | Omit<IProduct, 'id'>) => void;
   handleClickCloseDialog?: () => void;
+  fullWidth: boolean;
 }
 
 const ProductForm: React.FC<ProductFormProps> = observer(
@@ -40,15 +45,20 @@ const ProductForm: React.FC<ProductFormProps> = observer(
     action,
     productId,
     submitForm,
-    handleClickCloseDialog
+    handleClickCloseDialog,
+    fullWidth
   }: ProductFormProps): React.ReactElement => {
     const {
-      catalogStore: { categories, products }
+      catalogStore: { categories, getProduct }
     } = useStores();
-    const classes = useStyles();
+    const classes = useStyles({ fullWidth });
 
-    const currentCategory = productId ? products[productId - 1].categoryId : 0;
-    const currentProductName = productId ? products[productId - 1].name : '';
+    let currentProduct;
+    if (productId) {
+      currentProduct = getProduct(productId);
+    }
+    const currentCategory = currentProduct ? currentProduct.categoryId : 0;
+    const currentProductName = currentProduct ? currentProduct.name : '';
     const [productName, setProductName] = useState<string>(
       currentProductName || ''
     );
@@ -71,11 +81,13 @@ const ProductForm: React.FC<ProductFormProps> = observer(
         setErrorForm(true);
         return;
       }
+
       if (productId) {
         submitForm({ id: productId, name: productName, categoryId });
       } else {
         submitForm({ name: productName, categoryId });
       }
+
       if (handleClickCloseDialog) handleClickCloseDialog();
       setProductName('');
     };

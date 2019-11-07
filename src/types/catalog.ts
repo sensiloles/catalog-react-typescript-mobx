@@ -7,6 +7,7 @@ export interface ICatalogStore {
   addProduct: (props: Omit<IProduct, 'id'>) => void;
   removeProduct: (productId: number) => void;
   editProduct: (props: IProduct) => void;
+  getProduct: (id: number) => IProduct;
 }
 
 export interface ICategories {
